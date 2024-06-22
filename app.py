@@ -57,8 +57,11 @@ def pedestrian_detection(image, model, layer_name, personidz=0):
 with open("coco.names","r") as file:
     LABELS = file.read().strip().split("\n")
 
-weights_path = open("yolov4-tiny.weights")
-config_path = open("yolov4-tiny.cfg")
+with open("yolov4-tiny.weights", "rb") as file:
+    weights_path = file.read()
+
+with open("yolov4-tiny.cfg", "r") as file:
+    config_path = file.read()
 
 model = cv2.dnn.readNetFromDarknet(config_path, weights_path)
 # Uncomment the following lines if you have CUDA installed
