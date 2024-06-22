@@ -2,5 +2,5 @@ numpy==1.26.2
 streamlit==1.31.0
 streamlit-option-menu==0.3.6
 opencv-python==4.10.0.84
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+
 Imutils==0.5.4
