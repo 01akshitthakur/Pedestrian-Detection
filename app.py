@@ -5,11 +5,10 @@
 
 
 import streamlit as st
-import cv2 
+import cv2
 import numpy as np
 import imutils
 from tempfile import NamedTemporaryFile
-import requests
 import time
 
 NMS_THRESHOLD = 0.3
@@ -54,47 +53,14 @@ def pedestrian_detection(image, model, layer_name, personidz=0):
 
     return results
 
-# Fetching LABELS from GitHub
-labels_url = 'https://raw.githubusercontent.com/01akshitthakur/Pedestrian-Detection/main/coco.names'
-response_labels = requests.get(labels_url)
-
-if response_labels.status_code == 200:
-    # Successfully fetched the file contents
-    LABELS = response_labels.text.strip().split("\n")
-else:
-    # Handle the case where fetching failed
-    st.error(f"Failed to fetch '{labels_url}'. Status code: {response_labels.status_code}")
-    st.stop()
-
-# Fetching weights_path from GitHub
-weights_url = 'https://github.com/01akshitthakur/Pedestrian-Detection/raw/main/yolov4-tiny.weights'
-weights_response = requests.get(weights_url)
-
-if weights_response.status_code == 200:
-    # Save weights to a temporary file
-    weights_temp_file = NamedTemporaryFile(delete=False)
-    weights_temp_file.write(weights_response.content)
-    weights_path = weights_temp_file.name
-else:
-    st.error(f"Failed to fetch '{weights_url}'. Status code: {weights_response.status_code}")
-    st.stop()
-
-# Fetching config_path from GitHub
-config_url = 'https://raw.githubusercontent.com/01akshitthakur/Pedestrian-Detection/main/yolov4-tiny.cfg'
-config_response = requests.get(config_url)
-
-if config_response.status_code == 200:
-    # Successfully fetched the file contents
-    config_temp_file = NamedTemporaryFile(delete=False)
-    config_temp_file.write(config_response.content)
-    config_path = config_temp_file.name
-else:
-    # Handle the case where fetching failed
-    st.error(f"Failed to fetch '{config_url}'. Status code: {config_response.status_code}")
-    st.stop()
-
 # Load YOLO model
-model = cv2.dnn.readNetFromDarknet(config_response, weights_response)
+labelsPath = open("coco.names")
+LABELS = open(labelsPath).read().strip().split("\n")
+
+weights_path = open("yolov4-tiny.weights")
+config_path = open("yolov4-tiny.cfg")
+
+model = cv2.dnn.readNetFromDarknet(config_path, weights_path)
 # Uncomment the following lines if you have CUDA installed
 # model.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
 # model.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
@@ -129,10 +95,3 @@ if uploaded_file is not None:
         time.sleep(0.03)  # To control the frame rate
 
     cap.release()
-
-
-
-   
-
-
-   
