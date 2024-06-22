@@ -1,15 +1,15 @@
-
-
-#run this command in terminal to run the app:
-#streamlit run app.py --server.enableXsrfProtection false
-
-
 import streamlit as st
 import cv2
 import numpy as np
 import imutils
 from tempfile import NamedTemporaryFile
 import time
+import os
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 NMS_THRESHOLD = 0.3
 MIN_CONFIDENCE = 0.2
@@ -55,10 +55,14 @@ def pedestrian_detection(image, model, layer_name, personidz=0):
 
 # Load YOLO model
 labelsPath = "coco.names"
-LABELS = open(labelsPath).read().strip().split("\n")
-
 weights_path = "yolov4-tiny.weights"
 config_path = "yolov4-tiny.cfg"
+
+if not os.path.exists(labelsPath) or not os.path.exists(weights_path) or not os.path.exists(config_path):
+    st.error("Model files are missing. Ensure that coco.names, yolov4-tiny.weights, and yolov4-tiny.cfg are in the current directory.")
+    st.stop()
+
+LABELS = open(labelsPath).read().strip().split("\n")
 
 model = cv2.dnn.readNetFromDarknet(config_path, weights_path)
 # Uncomment the following lines if you have CUDA installed
@@ -76,6 +80,7 @@ uploaded_file = st.file_uploader("Choose a video...", type=["mp4", "avi", "mov"]
 if uploaded_file is not None:
     tfile = NamedTemporaryFile(delete=False)
     tfile.write(uploaded_file.read())
+    tfile.close()
 
     cap = cv2.VideoCapture(tfile.name)
     stframe = st.empty()
@@ -84,14 +89,19 @@ if uploaded_file is not None:
         ret, frame = cap.read()
         if not ret:
             break
+
         frame = imutils.resize(frame, width=700)
         results = pedestrian_detection(frame, model, layer_name, personidz=LABELS.index("person"))
 
         for res in results:
             cv2.rectangle(frame, (res[1][0], res[1][1]), (res[1][2], res[1][3]), (0, 255, 0), 2)
 
-        stframe.image(frame, channels="BGR", use_column_width=True)
+        # Convert the frame to RGB before displaying
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        stframe.image(frame_rgb, channels="RGB", use_column_width=True)
 
-        time.sleep(0.03)  # To control the frame rate
+        # Sleep to control the frame rate
+        time.sleep(0)
 
     cap.release()
+    os.remove(tfile.name)  # Clean up temporary file
