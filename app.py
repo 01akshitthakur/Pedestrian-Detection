@@ -54,11 +54,11 @@ def pedestrian_detection(image, model, layer_name, personidz=0):
     return results
 
 # Load YOLO model
-labelsPath = "C:\\Users\\Akshit\\Desktop\\MiniProject\\Pedestrian Detection\\coco.names"
+labelsPath = "https://github.com/01akshitthakur/Pedestrian-Detection/blob/main/coco.names"
 LABELS = open(labelsPath).read().strip().split("\n")
 
-weights_path = "C:\\Users\\Akshit\\Desktop\\MiniProject\\Pedestrian Detection\\yolov4-tiny.weights"
-config_path = "C:\\Users\\Akshit\\Desktop\\MiniProject\\Pedestrian Detection\\yolov4-tiny.cfg"
+weights_path = "https://github.com/01akshitthakur/Pedestrian-Detection/blob/main/yolov4-tiny.weights"
+config_path = "https://github.com/01akshitthakur/Pedestrian-Detection/blob/main/yolov4-tiny.cfg"
 
 model = cv2.dnn.readNetFromDarknet(config_path, weights_path)
 # Uncomment the following lines if you have CUDA installed
