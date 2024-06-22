@@ -94,7 +94,7 @@ else:
     st.stop()
 
 # Load YOLO model
-model = cv2.dnn.readNetFromDarknet(config_url, weights_url)
+model = cv2.dnn.readNetFromDarknet(config_response, weights_response)
 # Uncomment the following lines if you have CUDA installed
 # model.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
 # model.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
