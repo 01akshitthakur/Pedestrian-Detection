@@ -1,0 +1,5 @@
+numpy==1.26.2
+streamlit==1.31.0
+streamlit-option-menu==0.3.6
+cv2==4.9.0
+Imutils==0.5.4
