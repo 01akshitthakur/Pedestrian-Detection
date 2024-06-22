@@ -54,8 +54,8 @@ def pedestrian_detection(image, model, layer_name, personidz=0):
     return results
 
 # Load YOLO model
-labelsPath = open("coco.names")
-LABELS = open(labelsPath).read().strip().split("\n")
+with open("coco.names","r") as file:
+    LABELS = file.read().strip().split("\n")
 
 weights_path = open("yolov4-tiny.weights")
 config_path = open("yolov4-tiny.cfg")
